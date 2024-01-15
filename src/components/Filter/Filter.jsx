@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { getFilter, setFilter } from 'store/filterSlice';
+import { setFilter } from 'store/filter/filterSlice';
+import { selectFilter } from 'store/selectors';
 import css from './Filter.module.css';
 
 const Filter = () => {
@@ -9,7 +10,7 @@ const Filter = () => {
     dispatch(setFilter(value));
   };
 
-  const filterValue = useSelector(getFilter);
+  const filterValue = useSelector(selectFilter);
 
   return (
     <label>

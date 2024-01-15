@@ -1,19 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, getContacts } from 'store/contactsSlice';
 import css from './ContactForm.module.css';
+import * as contactsThunks from 'store/contacts/contactsThunks';
+import { selectContacts } from 'store/selectors';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const items = useSelector(selectContacts);
 
   const handleSubmit = evt => {
     evt.preventDefault();
 
     const form = evt.target;
     const name = form.elements.name.value;
-    const number = form.elements.number.value;
+    const phone = form.elements.phone.value;
 
-    const isDuplicated = contacts.find(
+    const isDuplicated = items.find(
       el => el.name.toLowerCase() === name.toLowerCase()
     );
 
@@ -22,7 +23,9 @@ const ContactForm = () => {
       return;
     }
 
-    dispatch(addContact(name, number));
+    const newContact = { name, phone };
+
+    dispatch(contactsThunks.addContact(newContact));
 
     form.reset();
   };
@@ -44,7 +47,7 @@ const ContactForm = () => {
         <input
           className={css['contact-form-input']}
           type="tel"
-          name="number"
+          name="phone"
           required
         />
       </label>

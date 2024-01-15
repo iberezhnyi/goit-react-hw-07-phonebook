@@ -1,29 +1,36 @@
-import { useSelector } from 'react-redux';
-import { getContacts } from 'store/contactsSlice';
-import { getFilter } from 'store/filterSlice';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as contactsThunks from 'store/contacts/contactsThunks';
+import { selectContacts, selectFilter } from 'store/selectors';
 import ContactItem from 'components/ContactItem/ContactItem';
 
 const ContactsList = () => {
-  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  const items = useSelector(selectContacts);
+  const filterValue = useSelector(selectFilter);
 
-  const filterValue = useSelector(getFilter);
+  useEffect(() => {
+    dispatch(contactsThunks.fetchContacts());
+  }, [dispatch]);
 
   const getFilteredUsers = () => {
     const normalizedFilter = filterValue.toLowerCase();
 
-    return contacts.filter(el =>
-      el.name.toLowerCase().includes(normalizedFilter)
-    );
+    return items.filter(el => {
+      return el.name.toLowerCase().includes(normalizedFilter);
+    });
   };
 
   const filteredUsers = getFilteredUsers();
 
   return (
-    <ul>
-      {filteredUsers.map(el => (
-        <ContactItem user={el} key={el.id} />
-      ))}
-    </ul>
+    <>
+      <ul>
+        {filteredUsers.map(el => (
+          <ContactItem user={el} key={el.id} />
+        ))}
+      </ul>
+    </>
   );
 };
 
