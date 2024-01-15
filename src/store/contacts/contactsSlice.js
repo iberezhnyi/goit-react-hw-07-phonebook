@@ -18,10 +18,10 @@ const contactsSlice = createSlice({
         state.items = payload;
       })
       .addCase(contactsThunks.addContact.fulfilled, (state, { payload }) => {
-        state.singleContact = payload;
+        state.items.push(payload);
       })
       .addCase(contactsThunks.deleteContact.fulfilled, (state, { payload }) => {
-        state.items.filter(el => el.id !== payload);
+        state.items = state.items.filter(el => el.id !== payload.id);
       })
       .addMatcher(action => action.type.endsWith(FULFILLED), handleFulfilled)
       .addMatcher(action => action.type.endsWith(PENDING), handlePending)
